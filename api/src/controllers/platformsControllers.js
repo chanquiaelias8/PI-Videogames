@@ -26,8 +26,8 @@ const get_Platforms_DB = async () => {
     );
 
     const createdPlatforms = results.map(([platform, created]) => platform.get({ plain: true }));
-    console.log('Plataformas guardadas en la base de datos correctamente.');
-    console.log('Plataformas creadas o encontradas:', createdPlatforms);
+    // console.log('Plataformas guardadas en la base de datos correctamente.');
+    // console.log('Plataformas creadas o encontradas:', createdPlatforms);
     return createdPlatforms; // Retorna las plataformas
 }
 
