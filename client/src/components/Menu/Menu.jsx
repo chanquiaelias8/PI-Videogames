@@ -1,64 +1,83 @@
-import React, { useState } from 'react';
 import './Menu.css';
+import React ,{ useState } from 'react';
+import { useSelector, /*useDispatch*/ } from "react-redux";
 
-const Menu = ({ onGenreChange, onSortChange, onFilterChange }) => {
-  const [selectedGenre, setSelectedGenre] = useState('');
-  const [selectedSort, setSelectedSort] = useState('');
-  const [filterByCreated, setFilterByCreated] = useState(false);
+export default function Menu (/*{ onGenreChange, onSortChange, onFilterChange }*/){
+  
+  const genres = useSelector((state) => state.genres);
+  const platforms = useSelector((state) => state.platforms);
+  const [selectedGenres, setSelectedGenres] = useState([]);
+  const [selectedPlatform, setSelectedPlatform] = useState([]);
+  const [alfabetic, setAlfabetic] = useState("sin orden");
+  
 
-  const handleGenreChange = (genre) => {
-    setSelectedGenre(genre);
-    onGenreChange(genre);
+
+  const handleGenreChange = (index) => {
+    if (selectedGenres.includes(index)) {
+      setSelectedGenres(selectedGenres.filter((genreIndex) => genreIndex !== index));
+    } else {
+      setSelectedGenres([...selectedGenres, index]);
+    }
   };
 
-  const handleSortChange = (sort) => {
-    setSelectedSort(sort);
-    onSortChange(sort);
-  };
-
-  const handleFilterChange = () => {
-    setFilterByCreated(!filterByCreated);
-    onFilterChange(!filterByCreated);
-  };
+  const handlePlatformChange = (index) => {
+    if (selectedPlatform.includes(index)) {
+      setSelectedPlatform(selectedPlatform.filter((platforIndex) => platforIndex !== index));
+    }else{
+      setSelectedPlatform([...selectedPlatform, index]);
+    }
+  }
 
   return (
     <div className="menu-container">
       <h3>Menú</h3>
-      
       <div className="menu-section">
         <h4>Ordenar por género:</h4>
-        <button
-          className={selectedGenre === 'Acción' ? 'selected' : ''}
-          onClick={() => handleGenreChange('Acción')}
-        >
-          Acción
-        </button>
-        <button
-          className={selectedGenre === 'Comedia' ? 'selected' : ''}
-          onClick={() => handleGenreChange('Comedia')}
-        >
-          Comedia
-        </button>
-        <button
-          className={selectedGenre === 'Drama' ? 'selected' : ''}
-          onClick={() => handleGenreChange('Drama')}
-        >
-          Drama
-        </button>
-        {/* Agrega más botones para otros géneros */}
+          {
+            genres.map((genre, index) => (
+              <button
+                key={`${genre.id}`}
+                className={selectedGenres.includes(index) ? 'selected' : ''}
+                onClick={() => handleGenreChange(index)}
+              >
+                {genre.name}
+              </button>
+            ))
+          }
+      </div>
+
+      <div className="menu-section">
+        <h4>Ordenar por plataforma:</h4>
+          {
+            platforms.map((platform, index) => (
+              <button
+                key={`${platform.id}`}
+                className={selectedPlatform.includes(index) ? 'selected' : ''}
+                onClick={() => handlePlatformChange(index)}
+              >
+                {platform.name}
+              </button>
+            ))
+          }
       </div>
 
       <div className="menu-section">
         <h4>Ordenar alfabéticamente:</h4>
         <button
-          className={selectedSort === 'A-Z' ? 'selected' : ''}
-          onClick={() => handleSortChange('A-Z')}
+          className={alfabetic === "sin orden"? 'selected' : ''}
+          onClick={() => setAlfabetic("sin orden")}
+        >
+          Sin order
+        </button>
+        <button
+          className={alfabetic === "A-Z"? 'selected' : ''}
+          onClick={() => setAlfabetic("A-Z")}
         >
           A-Z
         </button>
         <button
-          className={selectedSort === 'Z-A' ? 'selected' : ''}
-          onClick={() => handleSortChange('Z-A')}
+          className={alfabetic === "Z-A"? 'selected' : ''}
+          onClick={() => setAlfabetic("Z-A")}
         >
           Z-A
         </button>
@@ -68,13 +87,9 @@ const Menu = ({ onGenreChange, onSortChange, onFilterChange }) => {
         <h4>Filtrar por creados:</h4>
         <input
           type="checkbox"
-          checked={filterByCreated}
-          onChange={handleFilterChange}
         />
         <label>Mostrar solo los creados</label>
       </div>
     </div>
   );
 };
-
-export default Menu;
