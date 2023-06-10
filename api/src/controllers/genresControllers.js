@@ -4,22 +4,13 @@ require("dotenv").config();
 const { URL_GENRES, API_KEY } = process.env;
 
 const get_Genres_DB = async () => {
-	// Find or create genres in DB
-    const [genres, created] = await Genres.findOrCreate({ where: {} });
-
-    if (!created && genres.length === 0) {
-      // No genres found in DB, fetch from API
-      const apiGenres = (await axios.get(`${URL_GENRES}?key=${API_KEY}`)).data.results;
-  
-      // Create genres in DB using bulkCreate
-      await Genres.bulkCreate(
-        apiGenres.map((Genre) => ({ name: Genre.name }))
-      );
-    }
-  
-    // Retrieve all genres from DB
-    const allGenres = await Genres.findAll();
-    return allGenres;
-};
+  // All genres from API
+	let apiGenres = await axios.get(`${URL_GENRES}?key=${API_KEY}`);
+	apiGenres = apiGenres.data.results;
+	// Add to DB if not exits
+	apiGenres.forEach(async (G) => await Genres.findOrCreate({ where: { name: G.name } }));
+	return await Genres.findAll();
+};  
 
 module.exports = { get_Genres_DB };
+
