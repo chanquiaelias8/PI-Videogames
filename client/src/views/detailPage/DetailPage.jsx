@@ -1,37 +1,50 @@
-import React from 'react'
 import './DetailPage.css'
+import React, { useEffect, useState } from 'react'
+import {useDispatch, useSelector} from 'react-redux'
+import { useParams } from 'react-router-dom/cjs/react-router-dom';
 
+// import components
 import Navbar from '../../components/Navbar/Navbar';
+import Loader from '../../components/Loader/Loader';
 
-export default function DetailPage({ id, nombre, imagen, platforms, description, fechaLanzamiento, rating, generos }) {
-  
-  const cardData = {
-    id: 123,
-    nombre: 'Nombre del juego',
-    imagen: 'https://assets-prd.ignimgs.com/2021/12/30/36190303-image-7-1640880187142.png',
-    platforms: ['Plataforma 1', 'Plataforma 2', 'Plataforma 3'],
-    description: 'Descripción del juego',
-    fechaLanzamiento: '2023-06-06',
-    rating: 4.5,
-    generos: ['Género 1', 'Género 2', 'Género 3'],
-  };
+
+// import actions
+import {get_Detail, clean_ID} from '../../redux/actions/index'
+
+export default function DetailPage() {
+
+  const dispatch = useDispatch();
+  const detail = useSelector(state => state.detail);
+  const [loading, setLoading] = useState(true);
+  const { id } = useParams();
+
+  useEffect( ()=> {
+    dispatch(get_Detail(id)).then(() => setLoading(false));
+    return () => {
+			setLoading(true);
+      dispatch(clean_ID());
+		};
+  },[id])
+
+  console.log(detail);
 
   return (
     <>
     <Navbar/>
-    <div className='container'>
+    {loading? (<Loader/>): (
+      <div className='container'>
       <h2>Detalle del juego</h2>
-      <div>
-        <h3>{cardData.nombre}</h3>
-        <img src={cardData.imagen} alt={cardData.nombre} />
-        <p>ID: {cardData.id}</p>
-        <p>Plataformas: {cardData.platforms.join(', ')}</p>
-        <p>Descripción: {cardData.description}</p>
-        <p>Fecha de lanzamiento: {cardData.fechaLanzamiento}</p>
-        <p>Rating: {cardData.rating}</p>
-        <p>Géneros: {cardData.generos.join(', ')}</p>
+        <div>
+          <h3>{detail.name}</h3>
+          <img src={detail.background_image} alt={detail.name} />
+          <p>Plataformas: {detail.platforms.map((e, index) => index === detail.platforms.length-1?`${e.platform.name}.`:`${e.platform.name}, ` )}</p>
+          <p>Descripción: {detail.description_raw}</p>
+          <p>Fecha de lanzamiento: {detail.released}</p>
+          <p>Rating: {detail.rating}</p>
+          <p>Géneros: {detail.genres.map((e, index) =>detail.genres.length-1 === index? `${e.name}.` : `${e.name}, `)}</p>
+        </div>
       </div>
-    </div>
+    )}
     </>
   );
 }
