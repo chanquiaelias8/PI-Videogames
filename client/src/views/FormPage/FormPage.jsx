@@ -1,109 +1,220 @@
-import "./FormPage.css"
+import './FormPage.css';
 import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
+
+// import components
 import Navbar from '../../components/Navbar/Navbar';
 
-export default function FormPage() {
-  const [formData, setFormData] = useState({
-    id: 123,
-    nombre: '',
-    imagen: '',
-    platforms: [],
-    description: '',
-    fechaLanzamiento: '',
-    rating: 0,
-    generos: [],
-  });
-  
+// import actions
+import { createVideogame } from '../../redux/actions/index';
 
-  const handleSubmit = (event) => {
+export default function FormPage() {
+  const dispatch = useDispatch();
+  const history = useHistory();
+
+  const platforms = useSelector(state => state.platforms);
+  const genres = useSelector(state => state.genres);
+
+  const [formData, setFormData] = useState({
+    name: '',
+    background_image: '',
+    rating: 0,
+    description: '',
+    platforms: [],
+    genres: [],
+    released: '',
+  });
+
+  const [errors, setErrors] = useState({});
+
+  const handleSubmit = async event => {
     event.preventDefault();
-    // Aquí puedes realizar las acciones necesarias con los datos del formulario, como enviarlos a un servidor o almacenarlos localmente.
-    console.log(formData);
+
+    // Validación de datos
+    const validationErrors = {};
+
+    if (formData.name.trim() === '') {
+      validationErrors.name = 'El nombre es requerido.';
+    }
+
+    if (formData.background_image.trim() === '') {
+      validationErrors.background_image = 'La URL de la imagen de fondo es requerida.';
+    }
+
+    if (formData.description.trim() === '') {
+      validationErrors.description = 'La descripción es requerida.';
+    }
+
+    if (formData.released === '') {
+      validationErrors.released = 'La fecha de lanzamiento es requerida.';
+    }
+
+    if (formData.rating < 1 || formData.rating > 10) {
+      validationErrors.rating = 'El rating debe ser un número entre 1 y 10.';
+    }
+
+    if (formData.platforms.length === 0) {
+      validationErrors.platforms = 'Debes seleccionar al menos una plataforma.';
+    }
+
+    if (formData.genres.length === 0) {
+      validationErrors.genres = 'Debes seleccionar al menos un género.';
+    }
+
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    } else {
+      const videogameCreated = await dispatch(createVideogame(formData));
+      if (videogameCreated) {
+        history.push('/home');
+      }
+    }
+
+    // El formulario es válido, realizar acción de envío o procesamiento aquí
   };
 
-  const handleChange = (event) => {
+  const handleChange = event => {
     const { name, value } = event.target;
-    setFormData((prevData) => ({
+    setFormData(prevData => ({
       ...prevData,
       [name]: value,
     }));
   };
 
+  const handlePlatformChange = (event, platform) => {
+    event.preventDefault();
+    const { id, name } = platform;
+
+    if (formData.platforms.find(p => p.id === id)) {
+      setFormData(prevData => ({
+        ...prevData,
+        platforms: prevData.platforms.filter(p => p.id !== id),
+      }));
+    } else {
+      setFormData(prevData => ({
+        ...prevData,
+        platforms: [...prevData.platforms, { id, name }],
+      }));
+    }
+  };
+
+  const handleGenreChange = (event, genre) => {
+    event.preventDefault();
+    const { id, name } = genre;
+
+    if (formData.genres.find(g => g.id === id)) {
+      setFormData(prevData => ({
+        ...prevData,
+        genres: prevData.genres.filter(g => g.id !== id),
+      }));
+    } else {
+      setFormData(prevData => ({
+        ...prevData,
+        genres: [...prevData.genres, { id, name }],
+      }));
+    }
+  };
+
   return (
     <>
       <Navbar />
-      <form onSubmit={handleSubmit} className="form-container">
-        <label>
-          Nombre:
-          <input
-            type="text"
-            name="nombre"
-            value={formData.nombre}
-            onChange={handleChange}
-          />
-        </label>
+      <div className="form-container">
+        <form onSubmit={handleSubmit}>
+          <div className="form-left">
+            <label>
+              Nombre:
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+              />
+              {errors.name && <span className="error-message">{errors.name}</span>}
+            </label>
 
-        <label>
-          Imagen:
-          <input
-            type="text"
-            name="imagen"
-            value={formData.imagen}
-            onChange={handleChange}
-          />
-        </label>
+            <label>
+              Imagen de fondo:
+              <input
+                type="text"
+                name="background_image"
+                value={formData.background_image}
+                onChange={handleChange}
+              />
+              {errors.background_image && (
+                <span className="error-message">{errors.background_image}</span>
+              )}
+            </label>
 
-        <label>
-          Plataformas:
-          <input
-            type="text"
-            name="platforms"
-            value={formData.platforms}
-            onChange={handleChange}
-          />
-        </label>
+            <label>
+              Descripción:
+              <textarea
+                name="description"
+                value={formData.description}
+                onChange={handleChange}
+              />
+              {errors.description && <span className="error-message">{errors.description}</span>}
+            </label>
 
-        <label>
-          Descripción:
-          <textarea
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-          />
-        </label>
+            <label>
+              Fecha de lanzamiento:
+              <input
+                type="date"
+                name="released"
+                value={formData.released}
+                onChange={handleChange}
+              />
+              {errors.released && <span className="error-message">{errors.released}</span>}
+            </label>
 
-        <label>
-          Fecha de lanzamiento:
-          <input
-            type="date"
-            name="fechaLanzamiento"
-            value={formData.fechaLanzamiento}
-            onChange={handleChange}
-          />
-        </label>
+            <label>
+              Rating:
+              <input
+                type="number"
+                name="rating"
+                value={formData.rating}
+                onChange={handleChange}
+              />
+              {errors.rating && <span className="error-message">{errors.rating}</span>}
+            </label>
+          </div>
 
-        <label>
-          Rating:
-          <input
-            type="number"
-            name="rating"
-            value={formData.rating}
-            onChange={handleChange}
-          />
-        </label>
+          <div className="form-right">
+            <label>Plataformas:</label>
+            <div className="label">
+              {platforms.map(platform => (
+                <button
+                  key={platform.id}
+                  className={formData.platforms.find(p => p.id === platform.id) ? 'selected' : ''}
+                  onClick={event => handlePlatformChange(event, platform)}
+                >
+                  {platform.name}
+                </button>
+              ))}
+              {errors.platforms && <span className="error-message">{errors.platforms}</span>}
+            </div>
 
-        <label>
-          Géneros:
-          <input
-            type="text"
-            name="generos"
-            value={formData.generos}
-            onChange={handleChange}
-          />
-        </label>
+            <label>Géneros:</label>
+            <div className="label">
+              {genres.map(genre => (
+                <button
+                  key={genre.id}
+                  className={formData.genres.find(g => g.id === genre.id) ? 'selected' : ''}
+                  onClick={event => handleGenreChange(event, genre)}
+                >
+                  {genre.name}
+                </button>
+              ))}
+              {errors.genres && <span className="error-message">{errors.genres}</span>}
+            </div>
+          </div>
 
-        <button type="submit">Crear videojuego</button>
-      </form>
+          <button id="create" type="submit">
+            Crear videojuego
+          </button>
+        </form>
+      </div>
     </>
   );
 }
