@@ -56,6 +56,7 @@ export default function HomePage() {
                 currentData.map((videogame, index)=> (
                   <Card key={index} id={videogame.id} image={videogame.background_image} name={videogame.name} genres={videogame.genres} />
                 ))
+                
               }
             </div>
           </div>
