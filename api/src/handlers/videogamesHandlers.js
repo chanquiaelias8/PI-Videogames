@@ -29,13 +29,17 @@ const Post_Videogame = async (req, res) => {
         rating,
         description,
         platforms,
-        genres } = req.body;
+        genres,
+        released } = req.body;
+
+        let floatRating = parseFloat(rating);
+        console.log(typeof floatRating);
 
     try {
-        const response = await create_Videogame_DB(name, background_image, rating, description, platforms, genres);
+        const response = await create_Videogame_DB(name, background_image, floatRating, description, platforms, genres, released);
         return res.status(200).json(response);
     } catch (error) {
-        res.status(400).json({error: error.message})
+        res.status(400).send({"error": error.message})
     }
 }
 
