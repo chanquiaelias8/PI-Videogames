@@ -43,8 +43,8 @@ const get_Videogame_Api = async () => {
     return response;
 }
 
-const create_Videogame_DB = async (name, background_image, rating, description, platforms, genres) => {
-    const newVideogame = await Videogames.create({ name, background_image, rating, description, platforms, genres });
+const create_Videogame_DB = async (name, background_image, rating, description, platforms, genres, released) => {
+    const newVideogame = await Videogames.create({ name, background_image, rating, description, platforms, genres, released });
     return newVideogame;
 }
 
@@ -56,10 +56,9 @@ const get_Videogame_DB = async () => {
 // 
 const get_Videogame_ById = async (id) => {
     if (isNaN(id)) {
-        console.log("true es un uudi");
-        return await Videogames.findByPk(id);
+        let response = await Videogames.findByPk(id);
+        return response
     }else{
-        console.log("false no es un uuid");
         // let videogames = await get_Videogame_Api();
         let videogame = (await axios(`${URL}/${id}?key=${API_KEY}`)).data;
         return videogame
