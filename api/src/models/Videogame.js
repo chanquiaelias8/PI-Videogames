@@ -54,12 +54,12 @@ module.exports = (sequelize) => {
           msg: 'Rating is required.',
         },
         min: {
-          args: [0],
+          args: [1],
           msg: 'Rating must be a positive number.',
         },
         max: {
-          args: [5],
-          msg: 'Rating cannot exceed 5.',
+          args: [10],
+          msg: 'Rating cannot exceed 10.',
         },
       },
       defaultValue: 4.5,
@@ -78,7 +78,7 @@ module.exports = (sequelize) => {
       defaultValue: "This is a fantastic game with immersive gameplay and stunning graphics.",
     },
     platforms: {
-      type: DataTypes.ARRAY(DataTypes.STRING),
+      type: DataTypes.ARRAY(DataTypes.JSONB),
       allowNull: false,
       validate: {
         notNull: {
@@ -91,7 +91,7 @@ module.exports = (sequelize) => {
       defaultValue: ["PC", "PlayStation 5", "Xbox Series X"],
     },
     genres: {
-      type: DataTypes.ARRAY(DataTypes.STRING),
+      type: DataTypes.ARRAY(DataTypes.JSONB),
       allowNull: false,
       validate: {
         notNull: {
@@ -110,36 +110,3 @@ module.exports = (sequelize) => {
     }
   } , {timestamps: false, freezeTableName: true});
 };
-
-/* {
-  "id": "ce7feefc-eb61-4b32-81d5-f60e4d22b310",
-  "name": "videogame 3",
-  "background_image": "https://example.com/game_background.jpg",
-  "released": "2023-06-05T18:42:29.022Z",
-  "rating": 4.5,
-  "description": "este es el videogame 3",
-  "platforms": [],
-  "genres": [],
-  "created": true
-},
-{
-  "id": 3498,
-  "name": "Grand Theft Auto V",
-  "background_image": "https://media.rawg.io/media/games/456/456dea5e1c7e3cd07060c14e96612001.jpg",
-  "released": "2013-09-17",
-  "rating": 4.47,
-  "platforms": [],
-  "genres": [],
-  "created": false
-},
-{
-  "id": 3328,
-  "name": "The Witcher 3: Wild Hunt",
-  "background_image": "https://media.rawg.io/media/games/618/618c2031a07bbff6b4f611f10b6bcdbc.jpg",
-  "released": "2015-05-18",
-  "rating": 4.66,
-  "platforms": [],
-  "genres": [],
-  "created": false
-}
-*/
