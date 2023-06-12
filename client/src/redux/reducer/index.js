@@ -1,5 +1,5 @@
 import {
-    // CREATE_VIDEOGAME,
+    CREATE_VIDEOGAME,
     GET_PLATFORMS,
     GET_GENRES,
     GET_VIDEOGAMES,
@@ -16,18 +16,13 @@ const initialState = {
 
 const rootReducer = (state = initialState, action) => {
     switch (action.type) {
-        // case CREATE_VIDEOGAME:
-        //     const updatedVideogames = [...state.videogames];
+        case CREATE_VIDEOGAME:
+            const updatedVideogames = [...state.videogames];
 
-        //     // const lastSubarrayIndex = updatedVideogames.length -1;
-        //     // updatedVideogames[lastSubarrayIndex].length < 15
-        //     // ?updatedVideogames[lastSubarrayIndex].push(action.payload)
-        //     // :updatedVideogames.push([action.payload]);
-
-        //     return {
-        //         ...state,
-        //         videogames: updatedVideogames
-        //     };
+            return {
+                ...state,
+                videogames: updatedVideogames
+            };
         case CLEAN_ID:
 			return {
 				...state,
