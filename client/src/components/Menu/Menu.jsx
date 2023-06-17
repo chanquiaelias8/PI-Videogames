@@ -6,12 +6,12 @@ export default function Menu (/*{ onGenreChange, onSortChange, onFilterChange }*
   
   const genres = useSelector((state) => state.genres);
   const platforms = useSelector((state) => state.platforms);
+
   const [selectedGenres, setSelectedGenres] = useState([]);
   const [selectedPlatform, setSelectedPlatform] = useState([]);
+  
   const [alfabetic, setAlfabetic] = useState("sin orden");
   
-
-
   const handleGenreChange = (index) => {
     if (selectedGenres.includes(index)) {
       setSelectedGenres(selectedGenres.filter((genreIndex) => genreIndex !== index));
