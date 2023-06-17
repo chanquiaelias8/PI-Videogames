@@ -65,10 +65,17 @@ const get_Videogame_ById = async (id) => {
     }
 }
 
-const get_All_Videogames = async () => {
-    let allVideogames = await get_Videogame_Api();
-    allVideogames = allVideogames.concat(await get_Videogame_DB());
-    return allVideogames;
+const get_All_Videogames = async (name) => {
+  let allVideogames = await get_Videogame_Api();
+  allVideogames = allVideogames.concat(await get_Videogame_DB());
+  if (name) {
+    let filterVideogames = allVideogames.filter(videogame => videogame.name.toLowerCase().includes(name.toLowerCase()));
+    console.log(filterVideogames);
+    if (filterVideogames.length) {
+      return filterVideogames.slice(0, 15); // Retorna los primeros 15 videojuegos que coincidan con el nombre
+    }
+  }
+  return allVideogames;
 }
 
 module.exports = {
