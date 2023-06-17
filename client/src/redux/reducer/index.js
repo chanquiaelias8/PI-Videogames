@@ -5,10 +5,12 @@ import {
     GET_VIDEOGAMES,
     GET_DETAIL,
     CLEAN_ID,
-    SEARCHBYNAME,
+    SEARCH_BY_NAME,
+    ORDER_BY_NAME
   } from '../actions/index';
   
   const initialState = {
+    originalVideogames: [],
     videogames: [],
     videogamesByName: [],
     platforms: [],
@@ -18,7 +20,29 @@ import {
   
   const rootReducer = (state = initialState, action) => {
     switch (action.type) {
-      case SEARCHBYNAME:
+      case ORDER_BY_NAME:
+        const flatVideogames = state.videogames.flat();
+
+        if (action.payload === "sin orden") {
+          return {
+            ...state,
+            videogames: [...state.originalVideogames]
+          };
+        }
+      
+        const orderName = [...flatVideogames].sort((a, b) => {
+          if (action.payload === "A-Z") {
+            return a.name.localeCompare(b.name);
+          } else {
+            return b.name.localeCompare(a.name);
+          }
+        });
+      
+        return {
+          ...state,
+          videogames: orderName,
+        };
+      case SEARCH_BY_NAME:
         return {
           ...state,
           videogamesByName: action.payload,
@@ -44,6 +68,7 @@ import {
           ...state,
           videogames: action.payload,
           videogameByName: action.payload,
+          originalVideogames: action.payload
         };
       case GET_PLATFORMS:
         return {

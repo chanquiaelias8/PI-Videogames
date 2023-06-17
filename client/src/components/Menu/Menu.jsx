@@ -1,9 +1,14 @@
 import './Menu.css';
 import React ,{ useState } from 'react';
-import { useSelector, /*useDispatch*/ } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
-export default function Menu (/*{ onGenreChange, onSortChange, onFilterChange }*/){
+// import actions
+import { orderByName } from '../../redux/actions/index'
+
+export default function Menu (){
   
+  const dispatch = useDispatch();
+
   const genres = useSelector((state) => state.genres);
   const platforms = useSelector((state) => state.platforms);
 
@@ -26,6 +31,11 @@ export default function Menu (/*{ onGenreChange, onSortChange, onFilterChange }*
     }else{
       setSelectedPlatform([...selectedPlatform, index]);
     }
+  }
+
+  const handleFilterByName = (index) =>{
+    setAlfabetic(index)
+    dispatch(orderByName(index));
   }
 
   return (
@@ -65,19 +75,19 @@ export default function Menu (/*{ onGenreChange, onSortChange, onFilterChange }*
         <h4>Ordenar alfabéticamente:</h4>
         <button
           className={alfabetic === "sin orden"? 'selected' : ''}
-          onClick={() => setAlfabetic("sin orden")}
+          onClick={() => handleFilterByName("sin orden")}
         >
           Sin order
         </button>
         <button
           className={alfabetic === "A-Z"? 'selected' : ''}
-          onClick={() => setAlfabetic("A-Z")}
+          onClick={() => handleFilterByName("A-Z")}
         >
           A-Z
         </button>
         <button
           className={alfabetic === "Z-A"? 'selected' : ''}
-          onClick={() => setAlfabetic("Z-A")}
+          onClick={() => handleFilterByName("Z-A")}
         >
           Z-A
         </button>

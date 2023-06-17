@@ -6,13 +6,18 @@ export const GET_PLATFORMS = 'GET_PLATFORMS';
 export const GET_VIDEOGAMES = 'GET_VIDEOGAMES';
 export const GET_DETAIL = 'GET_DETAIL';
 export const CLEAN_ID = 'CLEAN_ID';
-export const SEARCHBYNAME = 'SEARCHBYNAME';
+export const SEARCH_BY_NAME = 'SEARCH_BY_NAME';
+export const ORDER_BY_NAME = 'ORDER_BY_NAME';
+
+export const orderByName = (order) => {
+	return { type: ORDER_BY_NAME, payload: order };
+};
 
 export function searchByName(name) {
   return async (dispatch) => {
       const response = await axios.get(`http://localhost:3001/videogames?name=${name}`);
       dispatch({
-        type: SEARCHBYNAME,
+        type: SEARCH_BY_NAME,
         payload: response.data,
       });
   };
