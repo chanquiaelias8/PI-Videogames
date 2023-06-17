@@ -1,34 +1,35 @@
 .menu-container {
-    background-color: #f0f0f0;
-    padding: 20px;
-  }
-  
-  .menu-section {
-    margin-bottom: 20px;
-  }
-  
-  h3 {
-    font-size: 24px;
-    margin-bottom: 10px;
-  }
-  
-  h4 {
-    font-size: 18px;
-    margin-bottom: 5px;
-  }
-  
-  button {
-    margin: 1px;
-    padding: 5px 5px;
-    border: none;
-    background-color: #e0e0e0;
-    cursor: pointer;
-  }
-  
-  button.selected {
-    background-color: #ff0000;
-  }
-  
-  input[type="checkbox"] {
-    margin-right: 10px;
-  }
+  background-color: #f0f0f0;
+  padding: 20px;
+}
+
+.menu-section {
+  margin-bottom: 20px;
+}
+
+h3 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+h4 {
+  font-size: 18px;
+  margin-bottom: 5px;
+}
+
+button {
+  margin: 1px;
+  padding: 5px 5px;
+  border: none;
+  background-color: #e0e0e0;
+  cursor: pointer;
+}
+
+button.selected {
+  background-color: #ff0000;
+  color: #f0f0f0;
+}
+
+input[type="checkbox"] {
+  margin-right: 10px;
+}
