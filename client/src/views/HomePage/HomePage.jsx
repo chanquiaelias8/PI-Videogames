@@ -2,15 +2,15 @@ import './HomePage.css';
 import React, { useEffect, useState, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-// import components
+// Import components
 import Navbar from '../../components/Navbar/Navbar';
 import Menu from '../../components/Menu/Menu';
 import Card from '../../components/Card/Card';
 import Loader from '../../components/Loader/Loader';
-import Paginado from '../../components/Pagination/Pagination';
+import Pagination from '../../components/Pagination/Pagination';
 import Modal from '../../components/Modal/Modal';
 
-// import actions
+// Import actions
 import { get_Genres, get_Platforms, get_Videogames, searchByName } from '../../redux/actions';
 
 export default function HomePage() {
@@ -23,15 +23,18 @@ export default function HomePage() {
   const [isLoadingPage, setIsLoadingPage] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-
+  const [searchLoading, setSearchLoading] = useState(false);
 
   const handleSearch = (searchInput) => {
     setIsSearching(true);
-    setIsLoadingPage(true);
-    dispatch(searchByName(searchInput)).then(() => {
-      setIsLoadingPage(false);
-      setCurrentPage(1); // Reiniciar a la página 1 después de la búsqueda
-    });
+    setSearchLoading(true);
+    dispatch(searchByName(searchInput))
+      .then(() => {
+        setCurrentPage(1); // Reiniciar a la página 1 después de la búsqueda
+      })
+      .finally(() => {
+        setSearchLoading(false);
+      });
   };
 
   const handleResetSearch = () => {
@@ -41,14 +44,14 @@ export default function HomePage() {
 
   useEffect(() => {
     setIsLoadingPage(true);
-    dispatch(get_Videogames()).then(() => {
-      setIsLoadingPage(false);
-    });
+    dispatch(get_Videogames())
+      .then(() => {
+        setIsLoadingPage(false);
+        setLoading(false);
+      });
     dispatch(get_Genres());
-    dispatch(get_Platforms()).then(() => {
-      setLoading(false);
-    });
-  }, [dispatch, currentPage]);
+    dispatch(get_Platforms());
+  }, [dispatch]);
 
   // Calcula el índice inicial y final de los objetos a mostrar en la página actual
   const itemsPerPage = 15;
@@ -61,7 +64,6 @@ export default function HomePage() {
   const totalPages = useMemo(() => Math.ceil(totalItems / itemsPerPage), [totalItems]);
 
   const handlePageChange = (page) => {
-    setIsLoadingPage(true);
     setCurrentPage(page);
   };
 
@@ -69,31 +71,21 @@ export default function HomePage() {
     <div>
       <Navbar handleSubmit={handleSearch} handleResetSearch={handleResetSearch} isSearching={isSearching} />
       <div className="home-container">
-        {loading ? (
+        {loading || searchLoading ? (
           <Loader />
         ) : (
           <>
             <Menu />
             <div className="content">
-              <Paginado
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={handlePageChange}
-              />
+              <Pagination totalPages={totalPages} currentPage={currentPage} onPageChange={handlePageChange} />
               <div className="card-content">
-                {isLoadingPage ? (
-                  <Loader />
+                {isSearching && currentData.length === 0 ? (
+                  <Modal
+                    title="Resultados Vacíos"
+                    content="No se encontraron resultados para la búsqueda."
+                  />
                 ) : (
-                  <>
-                    {isSearching && currentData.length === 0 ? (
-                      <Modal
-                        title="Resultados Vacíos"
-                        content="No se encontraron resultados para la búsqueda."
-                      />
-                    ) : (
-                      <Card games={currentData} />
-                    )}
-                  </>
+                  <Card games={currentData} />
                 )}
               </div>
             </div>

@@ -1,32 +1,44 @@
-import './Pagination.css'; // Importa el archivo CSS externo
+import React from "react";
+import './Pagination.css';
 
-import React from 'react';
+export default function Pagination({ totalPages, currentPage, onPageChange }) {
+  const pages = [...Array(totalPages).keys()];
 
-export default function Pagination({ currentPage, totalPages, onPageChange }){
-  const handleClick = (page) => {
-    if (onPageChange) {
-      onPageChange(page);
+  const previousPage = () => {
+    if (currentPage === 1) {
+      return;
     }
+    onPageChange(currentPage - 1);
   };
 
-  const renderPaginationItems = () => {
-    const items = [];
+  const nextPage = () => {
+    if (currentPage === totalPages) {
+      return;
+    }
+    onPageChange(currentPage + 1);
+  };
 
-    for (let i = 1; i <= totalPages; i++) {
-      const isActive = i === currentPage;
-      items.push(
-        <div
-          key={i}
-          className={`pagination-item ${isActive ? 'active' : ''}`}
-          onClick={() => handleClick(i)}
+  const goToPage = (page) => {
+    onPageChange(page);
+  };
+
+  return (
+    <div className="pagination">
+      <button onClick={previousPage} className="pagination__item" disabled={currentPage === 1}>
+        {"<"}
+      </button>
+      {pages.map((page) => (
+        <button
+          key={page}
+          onClick={() => goToPage(page + 1)}
+          className={`pagination__item ${currentPage === page + 1 ? 'active' : ''}`}
         >
-          {i}
-        </div>
-      );
-    }
-
-    return items;
-  };
-
-  return <div className="pagination">{renderPaginationItems()}</div>;
-};
+          {page + 1}
+        </button>
+      ))}
+      <button onClick={nextPage} className="pagination__item" disabled={currentPage === totalPages}>
+        {">"}
+      </button>
+    </div>
+  );
+}

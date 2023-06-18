@@ -4,6 +4,7 @@ import { Link, useHistory } from 'react-router-dom';
 import Modal from '../Modal/Modal';
 
 const Navbar = ({ handleSubmit, handleResetSearch, isSearching }) => {
+
   const history = useHistory();
   const [searchInput, setSearchInput] = useState('');
   const [textButton, setTextButton] = useState('Search');
@@ -25,6 +26,7 @@ const Navbar = ({ handleSubmit, handleResetSearch, isSearching }) => {
     }else if(textButton ==='Reset Search'){
       handleResetSearch();
       setTextButton('Search');
+      setSearchInput('')
     }
   }
 
