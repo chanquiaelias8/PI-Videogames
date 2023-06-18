@@ -3,7 +3,7 @@ import { Route, Switch, BrowserRouter } from 'react-router-dom';
 
 import LandingPage from './views/LandingPage/LandingPage';
 import HomePage from './views/HomePage/HomePage';
-import DetailPage from './views/DetailPage/DetailPage';
+import DetailPage from './views/detailPage/DetailPage';
 import FormPage from './views/FormPage/FormPage';
 
 function App() {
