@@ -8,6 +8,30 @@ export const GET_DETAIL = 'GET_DETAIL';
 export const CLEAN_ID = 'CLEAN_ID';
 export const SEARCH_BY_NAME = 'SEARCH_BY_NAME';
 export const ORDER_BY_NAME = 'ORDER_BY_NAME';
+export const SET_GENRE_FILTER = 'SET_GENRE_FILTER'
+export const SET_PLATFORMS_FILTER = 'SET_PLATFORMS_FILTER';
+export const SELECT_CREATED = 'SELECT_CREATED';
+
+export const filterCreated = (check) => {
+  return {
+    type: SELECT_CREATED,
+    payload: check
+  }
+}
+
+export const orderByPlatforms = (platforms) => {
+  return {
+    type: SET_PLATFORMS_FILTER,
+    payload: platforms
+  };
+}
+
+export const orderByGenres = (genres) => {
+  return {
+    type: SET_GENRE_FILTER,
+    payload: genres,
+  };
+};
 
 export const orderByName = (order) => {
 	return { type: ORDER_BY_NAME, payload: order };

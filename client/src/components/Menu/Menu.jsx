@@ -1,12 +1,11 @@
 import './Menu.css';
-import React ,{ useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from "react-redux";
 
 // import actions
-import { orderByName } from '../../redux/actions/index'
+import { orderByName, orderByGenres, orderByPlatforms, filterCreated } from '../../redux/actions/index';
 
-export default function Menu (){
-  
+export default function Menu() {
   const dispatch = useDispatch();
 
   const genres = useSelector((state) => state.genres);
@@ -14,79 +13,100 @@ export default function Menu (){
 
   const [selectedGenres, setSelectedGenres] = useState([]);
   const [selectedPlatform, setSelectedPlatform] = useState([]);
-  
   const [alfabetic, setAlfabetic] = useState("sin orden");
-  
-  const handleGenreChange = (index) => {
-    if (selectedGenres.includes(index)) {
-      setSelectedGenres(selectedGenres.filter((genreIndex) => genreIndex !== index));
-    } else {
-      setSelectedGenres([...selectedGenres, index]);
-    }
+  const [isChecked, setIsChecked] = useState(false);
+
+  const handleGenreChange = (genre) => {
+    setSelectedGenres((prevSelectedGenres) => {
+      if (prevSelectedGenres.includes(genre)) {
+        return prevSelectedGenres.filter((selectedGenre) => selectedGenre !== genre);
+      } else {
+        return [...prevSelectedGenres, genre];
+      }
+    });
   };
 
-  const handlePlatformChange = (index) => {
-    if (selectedPlatform.includes(index)) {
-      setSelectedPlatform(selectedPlatform.filter((platforIndex) => platforIndex !== index));
-    }else{
-      setSelectedPlatform([...selectedPlatform, index]);
+  const handlePlatformChange = (platform) => {
+    setSelectedPlatform((prevSelectedPlatforms) => {
+      if (prevSelectedPlatforms.includes(platform)) {
+        return prevSelectedPlatforms.filter((selectedPlatform) => selectedPlatform !== platform);
+      } else {
+        return [...prevSelectedPlatforms, platform];
+      }
+    })
+  };
+
+  const handleFilterByName = (index) => {
+    setAlfabetic(index);
+    dispatch(orderByName(index));
+  };
+
+  const handleCheckboxChange = (event) => {
+    const isChecked = event.target.checked;
+    setIsChecked(isChecked);
+
+    if (isChecked) {
+      console.log('El estado es verdadero');
+      dispatch(filterCreated(isChecked));
+    } else {
+      console.log('El estado es falso');
+      dispatch(filterCreated(isChecked));
     }
   }
 
-  const handleFilterByName = (index) =>{
-    setAlfabetic(index)
-    dispatch(orderByName(index));
-  }
+  useEffect(() => {
+    dispatch(orderByGenres(selectedGenres));
+  }, [selectedGenres, dispatch]);
+
+  useEffect(() => {
+    dispatch(orderByPlatforms(selectedPlatform));
+  },[selectedPlatform, dispatch])
 
   return (
     <div className="menu-container">
       <h3>Menú</h3>
       <div className="menu-section">
         <h4>Ordenar por género:</h4>
-          {
-            genres.map((genre, index) => (
-              <button
-                key={`${genre.id}`}
-                className={selectedGenres.includes(index) ? 'selected' : ''}
-                onClick={() => handleGenreChange(index)}
-              >
-                {genre.name}
-              </button>
-            ))
-          }
+        {genres.map((genre) => (
+          <button
+            key={genre.id}
+            className={selectedGenres.includes(genre) ? 'selected' : ''}
+            onClick={() => handleGenreChange(genre)}
+          >
+            {genre.name}
+          </button>
+        ))}
       </div>
 
       <div className="menu-section">
         <h4>Ordenar por plataforma:</h4>
-          {
-            platforms.map((platform, index) => (
-              <button
-                key={`${platform.id}`}
-                className={selectedPlatform.includes(index) ? 'selected' : ''}
-                onClick={() => handlePlatformChange(index)}
-              >
-                {platform.name}
-              </button>
-            ))
-          }
+        {platforms.map((platform) => (
+          <button
+            key={platform.id}
+            className={selectedPlatform.includes(platform) ? 'selected' : ''}
+            onClick={() => handlePlatformChange(platform)}
+          >
+            {platform.name}
+          </button>
+        ))}
       </div>
 
       <div className="menu-section">
         <h4>Ordenar alfabéticamente:</h4>
         <button
-          className={alfabetic === "sin orden"? 'selected' : ''}
+          className={alfabetic === "sin orden" ? 'selected' : ''}
           onClick={() => handleFilterByName("sin orden")}
         >
-          Sin order
+          Sin orden
         </button>
         <button
-          className={alfabetic === "A-Z"? 'selected' : ''}
+          className={alfabetic === "A-Z" ? 'selected' : ''}
           onClick={() => handleFilterByName("A-Z")}
         >
           A-Z
         </button>
         <button
-          className={alfabetic === "Z-A"? 'selected' : ''}
+          className={alfabetic === "Z-A" ? 'selected' : ''}
           onClick={() => handleFilterByName("Z-A")}
         >
           Z-A
@@ -95,11 +115,12 @@ export default function Menu (){
 
       <div className="menu-section">
         <h4>Filtrar por creados:</h4>
-        <input
-          type="checkbox"
-        />
-        <label>Mostrar solo los creados</label>
+        <label>
+          <input type="checkbox" 
+            onChange={handleCheckboxChange}
+          />
+          Mostrar solo los creados</label>
       </div>
     </div>
   );
-};
+}
