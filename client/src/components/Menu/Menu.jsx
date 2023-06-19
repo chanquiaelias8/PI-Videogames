@@ -46,10 +46,8 @@ export default function Menu() {
     setIsChecked(isChecked);
 
     if (isChecked) {
-      console.log('El estado es verdadero');
       dispatch(filterCreated(isChecked));
     } else {
-      console.log('El estado es falso');
       dispatch(filterCreated(isChecked));
     }
   }
@@ -116,7 +114,8 @@ export default function Menu() {
       <div className="menu-section">
         <h4>Filtrar por creados:</h4>
         <label>
-          <input type="checkbox" 
+          <input type="checkbox"
+            checked={isChecked}
             onChange={handleCheckboxChange}
           />
           Mostrar solo los creados</label>

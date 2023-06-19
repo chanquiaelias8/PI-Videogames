@@ -27,7 +27,6 @@ import {
         const check = action.payload;
         if (check) {
           let videogames = state.originalVideogames.flat();
-          console.log(videogames);
           let videogamesCreated = videogames.filter((game) => game.created === true);
           return {
             ...state,
