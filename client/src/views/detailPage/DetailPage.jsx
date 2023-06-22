@@ -17,15 +17,20 @@ export default function DetailPage() {
   const [loading, setLoading] = useState(true);
   const { id } = useParams();
 
-  useEffect( ()=> {
-    dispatch(get_Detail(id)).then(() => setLoading(false));
+  useEffect(() => {
+    dispatch(get_Detail(id))
+      .then(() => setLoading(false))
+      .catch((error) => {
+        // Manejar el error de la acción get_Detail
+        console.error('Error en get_Detail:', error);
+        setLoading(false);
+      });
+  
     return () => {
-			setLoading(true);
+      setLoading(true);
       dispatch(clean_ID());
-		};
-  },[dispatch, id])
-
-  console.log(detail);
+    };
+  }, [dispatch, id]);
 
   return (
     <>
