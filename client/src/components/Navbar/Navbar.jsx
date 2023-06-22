@@ -37,7 +37,7 @@ const Navbar = ({ handleSubmit, handleResetSearch, isSearching }) => {
   return (
     <nav>
       <div className="navbar">
-        <h1>Nombre de tu Aplicación</h1>
+        <h1>Game Explorer</h1>
         <div className="nav-buttons">
           <form className="search-form" onSubmit={handleFormSubmit}>
             <input
