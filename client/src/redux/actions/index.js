@@ -11,6 +11,13 @@ export const ORDER_BY_NAME = 'ORDER_BY_NAME';
 export const SET_GENRE_FILTER = 'SET_GENRE_FILTER'
 export const SET_PLATFORMS_FILTER = 'SET_PLATFORMS_FILTER';
 export const SELECT_CREATED = 'SELECT_CREATED';
+export const CLEAN_FILTERS = 'CLEAN_FILTERS';
+
+export const cleanFilters = () => {
+  return {
+    type: CLEAN_FILTERS
+  }
+}
 
 export const filterCreated = (check) => {
   return {
