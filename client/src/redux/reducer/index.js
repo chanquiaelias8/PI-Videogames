@@ -9,7 +9,8 @@ import {
     ORDER_BY_NAME,
     SET_GENRE_FILTER,
     SET_PLATFORMS_FILTER,
-    SELECT_CREATED
+    SELECT_CREATED,
+    CLEAN_FILTERS
   } from '../actions/index';
   
   const initialState = {
@@ -23,6 +24,11 @@ import {
   
   const rootReducer = (state = initialState, action) => {
     switch (action.type) {
+      case CLEAN_FILTERS:
+        return {
+          ...state,
+          videogames: state.originalVideogames
+        }
       case SELECT_CREATED:
         const check = action.payload;
         if (check) {
