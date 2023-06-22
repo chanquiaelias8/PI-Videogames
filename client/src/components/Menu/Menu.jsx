@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from "react-redux";
 
 // import actions
-import { orderByName, orderByGenres, orderByPlatforms, filterCreated } from '../../redux/actions/index';
+import { orderByName, orderByGenres, orderByPlatforms, filterCreated, cleanFilters } from '../../redux/actions/index';
 
 export default function Menu() {
   const dispatch = useDispatch();
@@ -38,7 +38,17 @@ export default function Menu() {
 
   const handleFilterByName = (index) => {
     setAlfabetic(index);
-    dispatch(orderByName(index));
+    if (index === 'sin orden') {
+      dispatch(orderByName(index));
+      if (selectedGenres.length > 0) {
+        dispatch(orderByGenres(selectedGenres));
+      }
+      if (selectedPlatform.length > 0) {
+        dispatch(orderByPlatforms(selectedPlatform));
+      }
+    }else{
+      dispatch(orderByName(index));
+    }
   };
 
   const handleCheckboxChange = (event) => {
@@ -50,6 +60,15 @@ export default function Menu() {
     } else {
       dispatch(filterCreated(isChecked));
     }
+  }
+
+  const handleDeletedFilters = (event) => {
+    event.preventDefault();
+    setSelectedGenres([]);
+    setSelectedPlatform([]);
+    setAlfabetic("sin orden");
+    setIsChecked(false);
+    dispatch(cleanFilters());
   }
 
   useEffect(() => {
@@ -119,6 +138,14 @@ export default function Menu() {
             onChange={handleCheckboxChange}
           />
           Mostrar solo los creados</label>
+      </div>
+
+      <div className="menu-section">
+        <h4>Resetear filtros</h4>
+        <button
+          id='deletedFilters'
+          onClick={(event) => handleDeletedFilters(event)}
+        >Delete filters</button>
       </div>
     </div>
   );
