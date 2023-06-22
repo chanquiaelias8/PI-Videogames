@@ -20,7 +20,6 @@ export default function HomePage() {
   const videogamesByName = useSelector(state => state.videogamesByName);
 
   const [loading, setLoading] = useState(true);
-  const [isLoadingPage, setIsLoadingPage] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchLoading, setSearchLoading] = useState(false);
@@ -43,10 +42,8 @@ export default function HomePage() {
   };
 
   useEffect(() => {
-    setIsLoadingPage(true);
     dispatch(get_Videogames())
       .then(() => {
-        setIsLoadingPage(false);
         setLoading(false);
       });
     dispatch(get_Genres());
