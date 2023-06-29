@@ -2,6 +2,8 @@ import './FormPage.css';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+import Modal from '../../components/Modal/Modal';
+
 
 // import components
 import Navbar from '../../components/Navbar/Navbar';
@@ -13,8 +15,11 @@ export default function FormPage() {
   const dispatch = useDispatch();
   const history = useHistory();
 
+  const videogames = useSelector(state => state.videogames);
   const platforms = useSelector(state => state.platforms);
   const genres = useSelector(state => state.genres);
+
+  const [showModal, setShowModal] = useState(false);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -36,6 +41,10 @@ export default function FormPage() {
 
     if (formData.name.trim() === '') {
       validationErrors.name = 'El nombre es requerido.';
+    }
+
+    if (formData.name.length > 30) {
+      validationErrors.name = 'Superaste los 30 caracteres permitidos'
     }
 
     if (formData.background_image.trim() === '') {
@@ -66,13 +75,18 @@ export default function FormPage() {
       setErrors(validationErrors);
       return;
     } else {
-      const videogameCreated = await dispatch(createVideogame(formData));
-      if (videogameCreated) {
-        history.push('/home');
+
+      let filter = videogames.filter(game => game.name.toLowerCase() === formData.name.toLowerCase());
+      if (filter.length) {
+        setShowModal(true);
+      }else{
+        const videogameCreated = dispatch(createVideogame(formData));
+        console.log(`response: ${videogameCreated}`);
+        if (videogameCreated) {
+          history.push('/home');
+        }
       }
     }
-
-    // El formulario es válido, realizar acción de envío o procesamiento aquí
   };
 
   const handleChange = event => {
@@ -116,6 +130,10 @@ export default function FormPage() {
       }));
     }
   };
+
+  function handleCloseModal() {
+    setShowModal(false);
+  }
 
   return (
     <>
@@ -215,6 +233,15 @@ export default function FormPage() {
           </button>
         </form>
       </div>
+
+      {showModal && (
+        <Modal
+          title="Input vacio"
+          onClose={handleCloseModal}
+        >
+          <p>Ya hay un videojuego creado con ese nombre.</p>
+        </Modal>
+      )}
     </>
   );
 }
