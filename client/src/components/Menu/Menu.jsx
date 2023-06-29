@@ -83,7 +83,7 @@ export default function Menu() {
     <div className="menu-container">
       <h3>Menú</h3>
       <div className="menu-section">
-        <h4>Ordenar por género:</h4>
+        <h4>Order by genres:</h4>
         {genres.map((genre) => (
           <button
             key={genre.id}
@@ -96,7 +96,7 @@ export default function Menu() {
       </div>
 
       <div className="menu-section">
-        <h4>Ordenar por plataforma:</h4>
+        <h4>Order by platforms:</h4>
         {platforms.map((platform) => (
           <button
             key={platform.id}
@@ -109,7 +109,8 @@ export default function Menu() {
       </div>
 
       <div className="menu-section">
-        <h4>Ordenar alfabéticamente:</h4>
+        <h4>
+          Order alphabetically:</h4>
         <button
           className={alfabetic === "sin orden" ? 'selected' : ''}
           onClick={() => handleFilterByName("sin orden")}
@@ -131,7 +132,7 @@ export default function Menu() {
       </div>
 
       <div className="menu-section">
-        <h4>Filtrar por creados:</h4>
+        <h4>filter created:</h4>
         <label>
           <input type="checkbox"
             checked={isChecked}
