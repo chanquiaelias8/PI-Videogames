@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 // import actions
 import { orderByName, orderByGenres, orderByPlatforms, filterCreated, cleanFilters } from '../../redux/actions/index';
 
-export default function Menu() {
+export default function Menu(props) {
   const dispatch = useDispatch();
 
   const genres = useSelector((state) => state.genres);
@@ -18,6 +18,7 @@ export default function Menu() {
 
   const handleGenreChange = (genre) => {
     setSelectedGenres((prevSelectedGenres) => {
+      props.onPageChange(1)
       if (prevSelectedGenres.includes(genre)) {
         return prevSelectedGenres.filter((selectedGenre) => selectedGenre !== genre);
       } else {
@@ -28,6 +29,7 @@ export default function Menu() {
 
   const handlePlatformChange = (platform) => {
     setSelectedPlatform((prevSelectedPlatforms) => {
+      props.onPageChange(1)
       if (prevSelectedPlatforms.includes(platform)) {
         return prevSelectedPlatforms.filter((selectedPlatform) => selectedPlatform !== platform);
       } else {
