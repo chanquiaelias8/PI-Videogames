@@ -1,5 +1,5 @@
 import './FormPage.css';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import Modal from '../../components/Modal/Modal';
@@ -12,6 +12,7 @@ import Navbar from '../../components/Navbar/Navbar';
 import { createVideogame } from '../../redux/actions/index';
 
 export default function FormPage() {
+
   const dispatch = useDispatch();
   const history = useHistory();
 
@@ -32,6 +33,13 @@ export default function FormPage() {
   });
 
   const [errors, setErrors] = useState({});
+
+  useEffect(() => {
+    // Check if genres or platforms are empty and redirect to /home
+    if (genres.length === 0 || platforms.length === 0) {
+      history.push('/home');
+    }
+  }, [genres, platforms, history]);
 
   const handleSubmit = async event => {
     event.preventDefault();
@@ -135,6 +143,7 @@ export default function FormPage() {
     setShowModal(false);
   }
 
+
   return (
     <>
       <Navbar />
@@ -148,6 +157,8 @@ export default function FormPage() {
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
+                maxlength="30"
+                placeholder='Max 30 characters'
               />
               {errors.name && <span className="error-message">{errors.name}</span>}
             </label>
@@ -159,6 +170,7 @@ export default function FormPage() {
                 name="background_image"
                 value={formData.background_image}
                 onChange={handleChange}
+                placeholder="URL image"
               />
               {errors.background_image && (
                 <span className="error-message">{errors.background_image}</span>
@@ -171,6 +183,8 @@ export default function FormPage() {
                 name="description"
                 value={formData.description}
                 onChange={handleChange}
+                maxlength="255"
+                placeholder='Max 255 characters'
               />
               {errors.description && <span className="error-message">{errors.description}</span>}
             </label>
@@ -201,7 +215,7 @@ export default function FormPage() {
           <div className="form-right">
             <label>Plataformas:</label>
             <div className="label">
-              {platforms.map(platform => (
+              {platforms?.map(platform => (
                 <button
                   key={platform.id}
                   className={formData.platforms.find(p => p.id === platform.id) ? 'selected' : ''}
@@ -215,7 +229,7 @@ export default function FormPage() {
 
             <label>Géneros:</label>
             <div className="label">
-              {genres.map(genre => (
+              {genres?.map(genre => (
                 <button
                   key={genre.id}
                   className={formData.genres.find(g => g.id === genre.id) ? 'selected' : ''}
@@ -223,7 +237,8 @@ export default function FormPage() {
                 >
                   {genre.name}
                 </button>
-              ))}
+                ))
+              }
               {errors.genres && <span className="error-message">{errors.genres}</span>}
             </div>
           </div>
