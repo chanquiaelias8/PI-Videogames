@@ -72,7 +72,7 @@ export default function HomePage() {
           <Loader />
         ) : (
           <>
-            <Menu/>
+            <Menu onPageChange={handlePageChange} />
             <div className="content">
               <Pagination totalPages={totalPages} currentPage={currentPage} onPageChange={handlePageChange} />
               <div className="card-content">
